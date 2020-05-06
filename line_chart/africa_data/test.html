@@ -1,0 +1,56 @@
+<head>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script src="jquery.csv.min.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    // load the visualization library from Google and set a listener
+    google.load("visualization", "1", {packages:["corechart"]});
+    google.setOnLoadCallback(drawChart);
+
+    // this has to be a global function
+    function drawChart() {
+	// grab the CSV
+	$.get("https://raw.githubusercontent.com/FinancialMarkets/latest_covid_africa_data/master/google_charts_data/line_chart_african_countries/line_chart_cases.csv", function(csvString) {
+	    // transform the CSV string into a 2-dimensional array
+	    var arrayData = $.csv.toArrays(csvString, {onParseValue: $.csv.hooks.castToScalar});
+
+	    // this new DataTable object holds all the data
+	    var data = new google.visualization.arrayToDataTable(arrayData);
+
+	    console.log(data);
+
+	    // this view can select a subset of the data at a time
+	    //var view = new google.visualization.DataView(data);
+	    //view.setColumns([0,1,2,3,4,5,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66]);
+
+	    // console.log(view)
+
+	    // set chart options
+	  var options = {
+	    title: "Cases Per Million",
+	    interpolateNulls: false,
+	    hAxis: {title: "Days since first case"}, //, minValue: data.getColumnRange(4).min, maxValue: data.getColumnRange(4).max},
+	    vAxis: {title: "Cases per Mil", minValue: "1", maxValue: "0.01", scaleType: 'log'},
+	    //curveType: 'function',
+	    //selectionMode: 'multiple',
+	    // Trigger tooltips
+	    // on selections.
+	    //tooltip: {trigger: 'selection'},
+	    //    legend: 'none'
+	    //interpolateNulls: false,
+	    width: 900,
+	    height: 500
+	  };
+
+	    // create the chart object and draw it
+	    var chart = new google.visualization.LineChart(document.getElementById('chart'));
+	    chart.draw(data, options);
+	});
+    }
+  </script>
+</head>
+
+<body>
+
+  <div id="chart" height="500px"></div>
+</body>
